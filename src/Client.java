@@ -1,32 +1,35 @@
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
 
-public class Client {
+public class Server {
 
     static final int port = 1200;
 
     public static void main(String[] args) throws Exception {
 
-        System.out.println("connection request");
+        // Listen to a specific port
 
-        //Create a client socket
-        Socket socket = new Socket("127.0.0.1", port);
+        ServerSocket serverSocket = new ServerSocket(port);
+        System.out.println("Waiting for connection");
+        Socket socClient = serverSocket.accept(); // Accept a client socket
         System.out.println("Connection established");
 
-        // create in / out
-        BufferedReader inClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter outClient = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+        // Initialize in / out
+        BufferedReader inServer = new BufferedReader(new InputStreamReader(socClient.getInputStream()));
+        PrintWriter outServer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socClient.getOutputStream())), true);
 
-        // todo: implement the scenario
+        String s = inServer.readLine();
+        String s1 = "";
+        s1 = s.replaceAll("[aeiouyAEIOUY]", ""); 
+        outServer.println(s1);
 
-        //close in / out
-        inClient.close();
-        outClient.close();
+        // Close in / out
+        inServer.close();
+        outServer.close();
 
-        // close client socket
-        socket.close();
+        // Close client socket
+        socClient.close();
+        serverSocket.close();
     }
 }
